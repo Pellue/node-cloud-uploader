@@ -1,6 +1,6 @@
 {
   "name": "node-cloud-uploader",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "image and video cloud uploader for hapi",
   "main": "dist/index.js",
   "keywords": [
