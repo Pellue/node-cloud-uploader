@@ -1,6 +1,6 @@
 {
   "name": "node-cloud-uploader",
-  "version": "0.1.1",
+  "version": "0.1.6",
   "description": "image and video cloud uploader for hapi",
   "main": "dist/index.js",
   "keywords": [
@@ -14,7 +14,7 @@
     "prepublish": "npm build"
   },
   "author": "ken <geunbaelee@gmail.com>",
-  "repository": "Pellue/postgresql-instagram-id",
+  "repository": "Pellue/node-cloud-uploader",
   "license": "MIT",
   "dependencies": {
     "@google-cloud/storage": "^1.1.1",
