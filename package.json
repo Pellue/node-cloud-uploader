@@ -1,6 +1,6 @@
 {
   "name": "node-cloud-uploader",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "image and video cloud uploader for hapi",
   "main": "dist/index.js",
   "keywords": [
@@ -18,7 +18,10 @@
   "license": "MIT",
   "dependencies": {
     "@google-cloud/storage": "^1.1.1",
-    "bluebird": "^3.5.0"
+    "bluebird": "^3.5.0",
+    "hoek": "^4.1.1",
+    "joi": "^10.4.2",
+    "request-promise": "^4.2.1"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

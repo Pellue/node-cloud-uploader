@@ -5,13 +5,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.uploadToStore = undefined;
 
-var _promise = require('babel-runtime/core-js/promise');
-
-var _promise2 = _interopRequireDefault(_promise);
-
 var _dataStore = require('./dataStore');
 
 var _dataStore2 = _interopRequireDefault(_dataStore);
+
+var _bluebird = require('bluebird');
+
+var _bluebird2 = _interopRequireDefault(_bluebird);
 
 var _util = require('util');
 
@@ -19,13 +19,13 @@ var _util2 = _interopRequireDefault(_util);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var uploadToStore = function uploadToStore(file) {
-	var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+var uploadToStore = function uploadToStore(dataStore, file) {
+	var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-	var dataStore = _dataStore2.default.getDataStore();
+
 	var bucket = dataStore.getBucket();
-
 	var filename = file.hapi.filename;
+	// const extension = filename.match(/\.(mp3|flac|wav|m4r|m4a)$/)[0];
 	var extension = filename.match(/\.(mp3|flac|wav|m4r|m4a)$/)[0];
 
 	var prefix = options['prefix'] !== undefined ? options['prefix'] : '';
@@ -34,7 +34,7 @@ var uploadToStore = function uploadToStore(file) {
 	var blob = bucket.file(path);
 	var blobStream = blob.createWriteStream();
 
-	return new _promise2.default(function (resolve, reject) {
+	return new _bluebird2.default(function (resolve, reject) {
 		file.pipe(blobStream);
 		blobStream.on('error', function (err) {
 			return reject(err);
