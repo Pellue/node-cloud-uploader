@@ -24,16 +24,11 @@ var _storage = require('@google-cloud/storage');
 
 var _storage2 = _interopRequireDefault(_storage);
 
-var _config = require('../../../config');
-
-var _config2 = _interopRequireDefault(_config);
-
-var _path = require('path');
-
-var _path2 = _interopRequireDefault(_path);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// import config from '../../../config';
+
+// import path from 'path';
 // const pubsubConfig = config.get('GCP_PUBSUB');
 
 // const projectId = config.get('GCP_STORAGE').projectId || config.get('GCLOUD_PROJECT');
@@ -52,6 +47,12 @@ internals.glcoudSchema = _joi2.default.object().keys({
 	bucket: _joi2.default.string().required()
 });
 
+internals.defaultSchema = _joi2.default.object().keys({
+	provider: _joi2.default.string().required(),
+	gcloud: _joi2.default.object().required()
+	// gcloud: Joi.alternatives().when('provider', {is: 'gcloud', then: Joi.object().required()})
+});
+
 internals.defaults = {
 	provider: 'gcloud'
 };
@@ -61,22 +62,30 @@ var DataStore = function () {
 		var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 		(0, _classCallCheck3.default)(this, DataStore);
 
+
 		var defaults = _hoek2.default.applyToDefaults(internals.defaults, options);
+		var validateDefaults = internals.defaultSchema.validate(defaults);
+
+		if (validateDefaults.error) {
+			throw new TypeError(validateDefaults.error);
+		}
+
 		this._provider = defaults.provider;
 
 		// multiple dataStore
-		if (provider === 'gcloud') {
+		if (this.provider === 'gcloud') {
 
-			var validateOptions = internals.glcoudSchema.validate(defaults);
+			var validateOptions = internals.glcoudSchema.validate(defaults.gcloud);
 			if (validateOptions.error) {
 				throw new TypeError(validateOptions.error);
 			}
 
-			this.storage = (0, _storage2.default)(defaults.settings);
-			this.bucket = this.storage.bucket(defaults.bucket);
+			var gcloud = defaults.gcloud;
+
+			this.storage = (0, _storage2.default)(gcloud.settings);
+			this.bucket = this.storage.bucket(gcloud.bucket);
 		} else {
-			this.storage = (0, _storage2.default)(settings);
-			this.bucket = this.storage.bucket(_config2.default.get('GCP_STORAGE_BUCKET'));
+			throw new Error('invalid provider');
 		}
 	}
 
@@ -94,8 +103,8 @@ var DataStore = function () {
 			this._provider = provider;
 		}
 	}], [{
-		key: 'getDataStore',
-		value: function getDataStore() {
+		key: 'getDataStoreWithEnv',
+		value: function getDataStoreWithEnv(configStore) {
 			return new DataStore();
 		}
 	}]);
